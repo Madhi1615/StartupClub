@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>SE Connect</title>
+<style>
+:root{
+ --saffron:#ff8a34;--saffron2:#ff9933;--green:#138808;--blue:#1b4fd6;
+ --ink:#202535;--muted:#677086;--line:rgba(31,45,85,.12);--danger:#b33f3b;
+ --bg:#fff9f4;--card:rgba(255,255,255,.92);--shadow:0 22px 65px rgba(31,44,75,.12);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+body{
+ background:
+ radial-gradient(circle at 0 0,rgba(255,153,51,.34),transparent 28%),
+ radial-gradient(circle at 100% 100%,rgba(19,136,8,.22),transparent 31%),
+ radial-gradient(circle at 84% 8%,rgba(27,79,214,.10),transparent 22%),
+ linear-gradient(180deg,#fffaf6,#f8fff7);
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.hide{display:none!important}
+.muted{color:var(--muted)}
+.shell{max-width:1240px;margin:auto;padding:22px}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.8);border-radius:24px;box-shadow:var(--shadow);backdrop-filter:blur(16px)}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;font-size:22px;letter-spacing:-.04em}
+.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-weight:950;color:#15203c;background:linear-gradient(135deg,#ff9933 0 29%,#fff 49%,#1b4fd6 67%,#138808 100%);box-shadow:0 10px 24px rgba(255,153,51,.22)}
+.flagline{height:6px;background:linear-gradient(90deg,#ff9933 0 34%,#fff 34% 63%,#1b4fd6 63% 69%,#138808 69% 100%)}
+.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 15px;border-radius:999px;font-weight:800}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,#ff8a34,#ff9933 42%,#138808);border:0;color:#fff}
+.btn.danger{background:#fff1ef;color:#b33f3b;border-color:#efcfcc}
+.btn.small{padding:7px 10px;font-size:12px}
+.input,textarea,select{width:100%;padding:13px 14px;border:1px solid rgba(27,79,214,.13);background:#fff;border-radius:15px;color:var(--ink);outline:none}
+.input:focus,textarea:focus,select:focus{border-color:rgba(27,79,214,.45);box-shadow:0 0 0 4px rgba(27,79,214,.07)}
+label{display:block;font-weight:700;font-size:14px;margin-bottom:7px}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:24px}
+.login-card{width:min(470px,100%);overflow:hidden}
+.login-inner{padding:30px}
+.eyebrow{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.16em;color:var(--blue)}
+.login-card h1{font-size:44px;line-height:1;letter-spacing:-.065em;margin:18px 0 14px}
+.error{margin-top:12px;color:var(--danger);font-weight:700;font-size:13px;line-height:1.4}
+.ok{color:#0d7a43}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:22px}
+.nav{display:flex;gap:8px;flex-wrap:wrap}
+.nav button{border:1px solid var(--line);background:rgba(255,255,255,.78);padding:9px 13px;border-radius:999px;font-weight:800;color:var(--ink)}
+.nav button.active{background:linear-gradient(135deg,rgba(255,153,51,.16),#fff 47%,rgba(19,136,8,.12));border-color:rgba(27,79,214,.18)}
+.hero{padding:34px 0 24px;display:grid;grid-template-columns:1.3fr .8fr;gap:22px;align-items:end}
+.hero h1{font-size:clamp(42px,6vw,76px);line-height:.94;letter-spacing:-.065em;margin:7px 0}
+.hero p{font-size:17px;line-height:1.55;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{padding:18px;background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.8);border-radius:20px;box-shadow:0 12px 36px rgba(31,44,75,.08)}
+.stat strong{font-size:27px;display:block}
+.stat span{font-size:12px;color:var(--muted)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.toolbar .search{flex:1;min-width:240px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.member{padding:19px;display:flex;flex-direction:column;min-height:330px;position:relative;overflow:hidden}
+.member:before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,#ff9933,#fff 46%,#1b4fd6 63%,#138808)}
+.member-head{display:flex;align-items:center;gap:13px}
+.avatar{width:58px;height:58px;flex:0 0 58px;border-radius:19px;display:grid;place-items:center;font-weight:950;color:var(--blue);background:linear-gradient(135deg,rgba(255,153,51,.22),#fff 50%,rgba(19,136,8,.18));border:1px solid var(--line);overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.member h3{font-size:18px;margin:0 0 3px}
+.member .headline{margin:15px 0 12px;line-height:1.43}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.tag{font-size:11px;padding:6px 8px;border-radius:999px;background:linear-gradient(135deg,rgba(255,153,51,.13),#fff 52%,rgba(19,136,8,.11));border:1px solid var(--line);font-weight:750}
+.actions{display:flex;gap:7px;margin-top:15px}
+.panel{padding:22px}
+.profile-grid{display:grid;grid-template-columns:300px 1fr;gap:18px}
+.profile-side h2{font-size:29px;letter-spacing:-.04em;margin:14px 0 4px}
+.section{padding:18px 0;border-top:1px solid var(--line)}
+.section:first-child{border-top:0}
+.section h3{margin:0 0 10px}
+.link{color:var(--blue);text-decoration:none;font-weight:750}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.form-grid .full{grid-column:1/-1}
+.modal{position:fixed;inset:0;background:rgba(20,27,48,.42);display:none;place-items:center;padding:18px;z-index:50;backdrop-filter:blur(6px)}
+.modal.open{display:grid}
+.modal-card{width:min(720px,100%);max-height:90vh;overflow:auto;padding:24px}
+.messages{display:grid;grid-template-columns:300px 1fr;min-height:650px}
+.threads{border-right:1px solid var(--line);padding:12px}
+.thread{padding:12px;border-radius:14px;margin-bottom:6px;cursor:pointer}
+.thread:hover,.thread.active{background:rgba(255,255,255,.82)}
+.chat{display:flex;flex-direction:column}
+.chat-head{padding:16px;border-bottom:1px solid var(--line);font-weight:900}
+.chat-body{padding:16px;display:flex;flex-direction:column;gap:9px;overflow:auto;max-height:500px;flex:1}
+.bubble{max-width:75%;padding:10px 13px;border-radius:16px;background:#fff;border:1px solid var(--line);line-height:1.42}
+.bubble.me{align-self:flex-end;background:linear-gradient(135deg,#ff9933,#138808);color:#fff;border:0}
+.chat-compose{display:flex;gap:8px;padding:14px;border-top:1px solid var(--line)}
+.chat-compose .input{flex:1}
+.admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:12px 9px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
+.status{display:inline-block;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:900}
+.status.active{background:#e6f7ed;color:#167649}
+.status.blocked{background:#fff0ee;color:#bd4b46}
+.empty{padding:35px;text-align:center;color:var(--muted)}
+.loading{position:fixed;inset:0;display:none;place-items:center;background:rgba(255,255,255,.76);z-index:80;backdrop-filter:blur(4px);font-weight:900}
+.loading.show{display:grid}
+.footer{padding:34px 0;color:var(--muted);font-size:12px}
+@media(max-width:900px){.hero,.profile-grid,.messages{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.admin-stats{grid-template-columns:1fr 1fr}.threads{border-right:0;border-bottom:1px solid var(--line)}}
+@media(max-width:620px){.shell{padding:15px}.grid,.stats,.admin-stats,.form-grid{grid-template-columns:1fr}.login-inner{padding:24px}.login-card h1{font-size:39px}.topbar{align-items:flex-start;flex-direction:column}.bubble{max-width:88%}}
+</style>
+</head>
+<body>
+<div id="loading" class="loading">Working…</div>
+
+<div id="loginView" class="login-wrap">
+  <div class="card login-card">
+    <div class="flagline"></div>
+    <div class="login-inner">
+      <div class="brand"><span class="logo">SE</span><span>SE Connect</span></div>
+      <div class="eyebrow" style="margin-top:28px">Private member network</div>
+      <h1>Welcome back.</h1>
+      <p class="muted">Sign in to discover members, update your profile and start private conversations.</p>
+      <form id="loginForm" style="margin-top:22px">
+        <label>Username</label>
+        <input id="loginUsername" class="input" placeholder="username (e.g. admin)" autocomplete="username" required>
+        <div style="height:13px"></div>
+        <label>Password</label>
+        <input id="loginPassword" type="password" class="input" placeholder="••••••••" autocomplete="current-password" required>
+        <div style="height:17px"></div>
+        <button id="loginBtn" class="btn primary" style="width:100%">Sign in</button>
+        <div id="loginError" class="error"></div>
+      </form>
+      <p class="muted" style="font-size:12px;line-height:1.45;margin-top:18px">Use your SE Connect username. If you paste an email address, the part before @ will be used.</p>
+    </div>
+  </div>
+</div>
+
+<div id="appView" class="hide">
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand"><span class="logo">SE</span><span>SE Connect</span></div>
+      <div class="nav">
+        <button data-view="members" class="active">Members</button>
+        <button data-view="messages">Messages</button>
+        <button data-view="profile">My profile</button>
+        <button id="adminNav" data-view="admin" class="hide">Admin</button>
+        <button id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+
+    <main id="membersView">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Private people network</div>
+          <h1>Find the right person faster.</h1>
+          <p>Discover what members are building, what they can help with, and what they are looking for.</p>
+        </div>
+        <div id="memberStats" class="stats"></div>
+      </div>
+      <div class="toolbar">
+        <input id="memberSearch" class="input search" placeholder="Search name, skills, company, help, interests…">
+        <select id="skillFilter"><option value="">All topics</option></select>
+      </div>
+      <div id="memberGrid" class="grid"></div>
+    </main>
+
+    <main id="profileView" class="hide"></main>
+    <main id="messagesView" class="hide"></main>
+    <main id="adminView" class="hide"></main>
+
+    <div class="footer">SE Connect · Private member community</div>
+  </div>
+</div>
+
+<div id="modal" class="modal"><div id="modalCard" class="card modal-card"></div></div>
+
+<script>
+(function(){
+'use strict';
+const CFG={
+  url:'https://jnomktahxycxtwnqmgdw.supabase.co',
+  key:'sb_publishable_Qu12Nz1BaQPIQMN7BgsHkw_etYyTjCX',
+  domain:'members.example.com'
+};
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const initials=n=>String(n||'?').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+const slug=s=>String(s||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9._-]+/g,'.').replace(/^\.+|\.+$/g,'');
+const showLoading=v=>$('#loading').classList.toggle('show',!!v);
+const showError=(el,msg)=>{el.textContent=msg||''};
+const state={session:null,user:null,profile:null,members:[],messages:[],selectedThread:null,view:'members'};
+
+function storeSession(s){state.session=s; if(s)localStorage.setItem('se_session',JSON.stringify(s));else localStorage.removeItem('se_session')}
+function getStoredSession(){try{return JSON.parse(localStorage.getItem('se_session')||'null')}catch{return null}}
+function apiHeaders(auth=true,extra={}){const h={'apikey':CFG.key,...extra};if(auth&&state.session?.access_token)h.Authorization='Bearer '+state.session.access_token;return h}
+async function parseResponse(r){const t=await r.text();let d=null;try{d=t?JSON.parse(t):null}catch{d=t}if(!r.ok){const m=(d&&typeof d==='object'&&(d.msg||d.message||d.error_description||d.error))||('Request failed ('+r.status+')');throw new Error(m)}return d}
+async function authFetch(path,opts={}){return parseResponse(await fetch(CFG.url+'/auth/v1'+path,{...opts,headers:apiHeaders(false,{'Content-Type':'application/json',...(opts.headers||{})})}))}
+async function restFetch(path,opts={}){return parseResponse(await fetch(CFG.url+'/rest/v1/'+path,{...opts,headers:apiHeaders(true,{'Content-Type':'application/json',...(opts.headers||{})})}))}
+async function fnFetch(name,body){return parseResponse(await fetch(CFG.url+'/functions/v1/'+name,{method:'POST',headers:apiHeaders(true,{'Content-Type':'application/json'}),body:JSON.stringify(body)}))}
+async function refreshSession(){
+  if(!state.session?.refresh_token) return false;
+  try{
+    const d=await authFetch('/token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:state.session.refresh_token})});
+    storeSession(d); return true;
+  }catch{storeSession(null);return false}
+}
+async function withAuth(fn){
+  try{return await fn()}catch(e){
+    if(/jwt|token|unauthor/i.test(e.message||'') && await refreshSession()) return await fn();
+    throw e;
+  }
+}
+async function login(username,password){
+  const u=slug(String(username).includes('@')?String(username).split('@')[0]:username);
+  if(!u)throw new Error('Enter your username.');
+  const email=u+'@'+CFG.domain;
+  const d=await authFetch('/token?grant_type=password',{method:'POST',body:JSON.stringify({email,password})});
+  storeSession(d);
+  return d;
+}
+async function loadMe(){
+  const u=await withAuth(()=>authFetch('/user',{method:'GET',headers:{Authorization:'Bearer '+state.session.access_token}}));
+  state.user=u;
+  const rows=await withAuth(()=>restFetch('profiles?select=*&id=eq.'+encodeURIComponent(u.id)));
+  if(!rows?.length)throw new Error('Profile record not found.');
+  state.profile=rows[0];
+  if(state.profile.status==='blocked'){storeSession(null);throw new Error('Your account is blocked. Contact an administrator.')}
+}
+async function loadMembers(){
+  const rows=await withAuth(()=>restFetch('profiles?select=*&order=full_name.asc'));
+  state.members=rows||[];
+}
+async function loadMessages(){
+  const uid=state.user.id;
+  const or=encodeURIComponent('(sender_id.eq.'+uid+',recipient_id.eq.'+uid+')');
+  const rows=await withAuth(()=>restFetch('messages?select=*&or='+or+'&order=created_at.asc'));
+  state.messages=rows||[];
+}
+async function bootstrap(){
+  showLoading(true);
+  try{
+    await loadMe(); await loadMembers(); await loadMessages();
+    $('#loginView').classList.add('hide'); $('#appView').classList.remove('hide');
+    $('#adminNav').classList.toggle('hide',state.profile.role!=='admin');
+    renderMembers(); renderProfile(); renderMessages();
+    if(state.profile.role==='admin') await renderAdmin();
+    switchView(state.profile.role==='admin'?'admin':'members');
+  }finally{showLoading(false)}
+}
+function switchView(v){
+  state.view=v;
+  ['members','profile','messages','admin'].forEach(x=>$('#'+x+'View').classList.toggle('hide',x!==v));
+  $$('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+  if(v==='messages')renderMessages();
+  if(v==='profile')renderProfile();
+  if(v==='admin'&&state.profile.role==='admin')renderAdmin();
+}
+function visibleMembers(){
+  const q=$('#memberSearch')?.value.trim().toLowerCase()||'';
+  const skill=$('#skillFilter')?.value||'';
+  return state.members.filter(m=>m.status==='active').filter(m=>{
+    const hay=[m.full_name,m.username,m.headline,m.company,m.location,m.bio,m.building,m.can_help,m.looking_for,...(m.skills||[])].join(' ').toLowerCase();
+    return (!q||hay.includes(q))&&(!skill||(m.skills||[]).includes(skill));
+  });
+}
+function renderMembers(){
+  const active=state.members.filter(x=>x.status==='active');
+  const skills=[...new Set(active.flatMap(x=>x.skills||[]))].filter(Boolean).sort();
+  const complete=active.filter(x=>x.bio&&x.can_help&&x.looking_for).length;
+  $('#memberStats').innerHTML=`<div class="stat"><strong>${active.length}</strong><span>Active members</span></div><div class="stat"><strong>${skills.length}</strong><span>Topics / skills</span></div><div class="stat"><strong>${complete}</strong><span>Rich profiles</span></div>`;
+  const sf=$('#skillFilter'); const prev=sf.value;
+  sf.innerHTML='<option value="">All topics</option>'+skills.map(s=>`<option ${s===prev?'selected':''}>${esc(s)}</option>`).join('');
+  const items=visibleMembers();
+  $('#memberGrid').innerHTML=items.length?items.map(m=>`<article class="card member">
+    <div class="member-head"><div class="avatar">${m.avatar_url?`<img src="${esc(m.avatar_url)}" alt="">`:esc(initials(m.full_name))}</div><div><h3>${esc(m.full_name)}</h3><div class="muted" style="font-size:12px">@${esc(m.username)}</div></div></div>
+    <div class="headline">${esc(m.headline||m.company||'Member of SE Connect')}</div>
+    <div class="muted" style="font-size:12px;margin-bottom:12px">${esc(m.company||'')}${m.company&&m.location?' · ':''}${esc(m.location||'')}</div>
+    <div class="tags">${(m.skills||[]).slice(0,6).map(s=>`<span class="tag">${esc(s)}</span>`).join('')}</div>
+    <div class="actions"><button class="btn small" onclick="SE.openMember('${m.id}')">View profile</button>${m.id!==state.user.id?`<button class="btn small primary" onclick="SE.messageMember('${m.id}')">Message</button>`:''}</div>
+  </article>`).join(''):`<div class="card empty" style="grid-column:1/-1">No matching members.</div>`;
+}
+function profileHtml(m,own=false){
+ return `<div class="profile-grid">
+  <aside class="card panel profile-side">
+   <div class="avatar" style="width:78px;height:78px;font-size:24px">${m.avatar_url?`<img src="${esc(m.avatar_url)}" alt="">`:esc(initials(m.full_name))}</div>
+   <h2>${esc(m.full_name)}</h2><div class="muted">@${esc(m.username)}</div>
+   <p>${esc(m.headline||'')}</p>
+   <div class="muted">${esc(m.company||'')}</div><div class="muted">${esc(m.location||'')}</div>
+   <div class="tags" style="margin-top:17px">${(m.skills||[]).map(s=>`<span class="tag">${esc(s)}</span>`).join('')}</div>
+   <div class="actions">${own?`<button class="btn primary" onclick="SE.editProfile()">Edit profile</button>`:`<button class="btn primary" onclick="SE.messageMember('${m.id}')">Message</button>`}</div>
+  </aside>
+  <section class="card panel">
+   <div class="section"><h3>Who I am</h3><div class="muted" style="line-height:1.6">${esc(m.bio||'Not added yet.')}</div></div>
+   <div class="section"><h3>What I’m building / obsessed with</h3><div class="muted" style="line-height:1.6">${esc(m.building||'Not added yet.')}</div></div>
+   <div class="section"><h3>I can help with</h3><div class="muted" style="line-height:1.6">${esc(m.can_help||'Not added yet.')}</div></div>
+   <div class="section"><h3>I’m looking for</h3><div class="muted" style="line-height:1.6">${esc(m.looking_for||'Not added yet.')}</div></div>
+   <div class="section"><h3>Links</h3>
+    ${m.linkedin_url?`<div><a class="link" target="_blank" rel="noopener" href="${esc(m.linkedin_url)}">LinkedIn</a></div>`:''}
+    ${m.website_url?`<div><a class="link" target="_blank" rel="noopener" href="${esc(m.website_url)}">Website</a></div>`:''}
+    ${!m.linkedin_url&&!m.website_url?'<div class="muted">No links added.</div>':''}
+   </div>
+   ${own?`<div class="section"><h3>Account security</h3><button class="btn" onclick="SE.changePassword()">Change password</button></div>`:''}
+  </section>
+ </div>`;
+}
+function renderProfile(){if(state.profile)$('#profileView').innerHTML=profileHtml(state.profile,true)}
+function openMember(id){const m=state.members.find(x=>x.id===id);if(!m)return;openModal(`<div style="display:flex;justify-content:space-between;gap:10px;align-items:start"><div class="eyebrow">Member profile</div><button class="btn small" onclick="SE.closeModal()">Close</button></div><div style="height:12px"></div>${profileHtml(m,m.id===state.user.id)}`)}
+function openModal(content){$('#modalCard').innerHTML=content;$('#modal').classList.add('open')}
+function closeModal(){$('#modal').classList.remove('open');$('#modalCard').innerHTML=''}
+function editProfile(){
+ const p=state.profile;
+ openModal(`<h2 style="margin-top:0">Edit profile</h2><form id="editProfileForm" class="form-grid">
+ <div><label>Headline</label><input class="input" name="headline" value="${esc(p.headline||'')}"></div>
+ <div><label>Company / team</label><input class="input" name="company" value="${esc(p.company||'')}"></div>
+ <div><label>Location</label><input class="input" name="location" value="${esc(p.location||'')}"></div>
+ <div><label>Skills (comma separated)</label><input class="input" name="skills" value="${esc((p.skills||[]).join(', '))}"></div>
+ <div class="full"><label>Who I am</label><textarea name="bio" rows="4">${esc(p.bio||'')}</textarea></div>
+ <div class="full"><label>What I’m building / obsessed with</label><textarea name="building" rows="4">${esc(p.building||'')}</textarea></div>
+ <div class="full"><label>I can help with</label><textarea name="can_help" rows="3">${esc(p.can_help||'')}</textarea></div>
+ <div class="full"><label>I’m looking for</label><textarea name="looking_for" rows="3">${esc(p.looking_for||'')}</textarea></div>
+ <div><label>LinkedIn URL</label><input class="input" name="linkedin_url" value="${esc(p.linkedin_url||'')}"></div>
+ <div><label>Website URL</label><input class="input" name="website_url" value="${esc(p.website_url||'')}"></div>
+ <div class="full" style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="btn" onclick="SE.closeModal()">Cancel</button><button class="btn primary">Save</button></div>
+ <div id="editErr" class="error full"></div></form>`);
+ $('#editProfileForm').onsubmit=async e=>{e.preventDefault();showLoading(true);try{
+  const f=new FormData(e.currentTarget);const body={headline:f.get('headline'),company:f.get('company'),location:f.get('location'),bio:f.get('bio'),building:f.get('building'),can_help:f.get('can_help'),looking_for:f.get('looking_for'),linkedin_url:f.get('linkedin_url'),website_url:f.get('website_url'),skills:String(f.get('skills')||'').split(',').map(x=>x.trim()).filter(Boolean),updated_at:new Date().toISOString()};
+  const rows=await withAuth(()=>restFetch('profiles?id=eq.'+state.user.id,{method:'PATCH',headers:{Prefer:'return=representation'},body:JSON.stringify(body)}));
+  state.profile=rows[0]; await loadMembers(); renderProfile();renderMembers();closeModal();
+ }catch(err){showError($('#editErr'),err.message)}finally{showLoading(false)}};
+}
+function changePassword(){
+ openModal(`<h2 style="margin-top:0">Change password</h2><form id="passForm"><label>New password</label><input id="newPass" type="password" class="input" minlength="12" required><div style="height:12px"></div><label>Confirm password</label><input id="newPass2" type="password" class="input" minlength="12" required><div style="height:16px"></div><button class="btn primary">Update password</button><div id="passErr" class="error"></div></form>`);
+ $('#passForm').onsubmit=async e=>{e.preventDefault();const a=$('#newPass').value,b=$('#newPass2').value;if(a!==b)return showError($('#passErr'),'Passwords do not match.');showLoading(true);try{await withAuth(()=>authFetch('/user',{method:'PUT',headers:{Authorization:'Bearer '+state.session.access_token},body:JSON.stringify({password:a})}));closeModal();alert('Password updated.')}catch(err){showError($('#passErr'),err.message)}finally{showLoading(false)}};
+}
+function partnerId(m){return m.sender_id===state.user.id?m.recipient_id:m.sender_id}
+function renderMessages(){
+ const map=new Map(); state.messages.forEach(m=>{const id=partnerId(m);if(!map.has(id)||new Date(m.created_at)>new Date(map.get(id).created_at))map.set(id,m)});
+ const partners=[...map.keys()].map(id=>state.members.find(x=>x.id===id)).filter(Boolean);
+ if(!state.selectedThread&&partners[0])state.selectedThread=partners[0].id;
+ $('#messagesView').innerHTML=`<div class="card messages">
+  <div class="threads"><div style="padding:8px 8px 12px;font-weight:900">Conversations</div>${partners.length?partners.map(p=>`<div class="thread ${p.id===state.selectedThread?'active':''}" onclick="SE.selectThread('${p.id}')"><b>${esc(p.full_name)}</b><div class="muted" style="font-size:11px">@${esc(p.username)}</div></div>`).join(''):'<div class="muted" style="padding:8px">No messages yet. Start from a member profile.</div>'}</div>
+  <div class="chat">${chatHtml()}</div></div>`;
+}
+function chatHtml(){
+ if(!state.selectedThread)return `<div class="empty">Choose a conversation.</div>`;
+ const p=state.members.find(x=>x.id===state.selectedThread);if(!p)return `<div class="empty">Member not found.</div>`;
+ const msgs=state.messages.filter(m=>partnerId(m)===p.id);
+ return `<div class="chat-head">${esc(p.full_name)}</div><div class="chat-body" id="chatBody">${msgs.length?msgs.map(m=>`<div class="bubble ${m.sender_id===state.user.id?'me':''}">${esc(m.body)}<div style="font-size:9px;opacity:.65;margin-top:4px">${new Date(m.created_at).toLocaleString()}</div></div>`).join(''):'<div class="muted">Start the conversation.</div>'}</div><form id="chatForm" class="chat-compose"><input id="chatInput" class="input" maxlength="5000" placeholder="Write a message…" required><button class="btn primary">Send</button></form>`;
+}
+function bindChatForm(){
+ const f=$('#chatForm');if(!f)return;
+ f.onsubmit=async e=>{e.preventDefault();const body=$('#chatInput').value.trim();if(!body)return;showLoading(true);try{
+   await withAuth(()=>restFetch('messages',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({sender_id:state.user.id,recipient_id:state.selectedThread,body})}));
+   await loadMessages();renderMessages();setTimeout(()=>{const b=$('#chatBody');if(b)b.scrollTop=b.scrollHeight},0);
+ }catch(err){alert(err.message)}finally{showLoading(false)}};
+}
+function selectThread(id){state.selectedThread=id;renderMessages();bindChatForm()}
+function messageMember(id){state.selectedThread=id;closeModal();switchView('messages');renderMessages();bindChatForm()}
+async function renderAdmin(){
+ if(state.profile.role!=='admin')return;
+ const summary=await withAuth(()=>fnFetch('admin-user',{action:'report_summary'})).catch(()=>({total:state.members.length,active:state.members.filter(x=>x.status==='active').length,blocked:state.members.filter(x=>x.status==='blocked').length,messages_7d:'—'}));
+ $('#adminView').innerHTML=`<div class="hero" style="padding-top:18px"><div><div class="eyebrow">Administrator console</div><h1 style="font-size:54px">Community control.</h1><p>Manage access, reset passwords, add members and export reports.</p></div></div>
+ <div class="admin-stats">${[['Total',summary.total],['Active',summary.active],['Blocked',summary.blocked],['Messages · 7d',summary.messages_7d]].map(x=>`<div class="stat"><strong>${x[1]??0}</strong><span>${x[0]}</span></div>`).join('')}</div>
+ <div class="toolbar"><input id="adminSearch" class="input search" placeholder="Search members…" oninput="SE.filterAdmin()"><button class="btn primary" onclick="SE.addMember()">Add member</button><button class="btn" onclick="SE.exportCsv()">Export CSV</button></div>
+ <div class="card panel table-wrap"><table><thead><tr><th>Member</th><th>Role</th><th>Status</th><th>Profile</th><th>Actions</th></tr></thead><tbody id="adminBody">${adminRows(state.members)}</tbody></table></div>`;
+}
+function completeness(m){const a=['headline','bio','can_help','looking_for'].filter(k=>m[k]).length;return Math.round(a/4*100)+'%'}
+function adminRows(rows){return rows.map(m=>`<tr data-hay="${esc([m.full_name,m.username,m.company,m.headline].join(' ').toLowerCase())}"><td><b>${esc(m.full_name)}</b><div class="muted">@${esc(m.username)}</div></td><td>${esc(m.role)}</td><td><span class="status ${m.status}">${esc(m.status)}</span></td><td>${completeness(m)}</td><td>${m.id===state.user.id?'<span class="muted">Current admin</span>':`<button class="btn small" onclick="SE.toggleBlock('${m.id}','${m.status}')">${m.status==='blocked'?'Unblock':'Block'}</button> <button class="btn small" onclick="SE.resetPassword('${m.id}','${esc(m.username)}')">Reset password</button>`}</td></tr>`).join('')}
+function filterAdmin(){const q=$('#adminSearch').value.trim().toLowerCase();$$('#adminBody tr').forEach(tr=>tr.style.display=!q||tr.dataset.hay.includes(q)?'':'none')}
+async function toggleBlock(id,status){if(!confirm((status==='blocked'?'Unblock':'Block')+' this member?'))return;showLoading(true);try{await withAuth(()=>fnFetch('admin-user',{action:status==='blocked'?'unblock_user':'block_user',user_id:id}));await loadMembers();renderMembers();await renderAdmin()}catch(e){alert(e.message)}finally{showLoading(false)}}
+async function resetPassword(id,username){if(!confirm('Reset password for '+username+'?'))return;showLoading(true);try{const d=await withAuth(()=>fnFetch('admin-user',{action:'reset_password',user_id:id}));openModal(`<h2>Temporary password</h2><p>Username: <b>${esc(username)}</b></p><div class="input" style="font-family:monospace">${esc(d.temporary_password)}</div><p class="muted">Copy this securely and ask the member to change it after login.</p><button class="btn" onclick="SE.closeModal()">Close</button>`)}catch(e){alert(e.message)}finally{showLoading(false)}}
+function addMember(){
+ openModal(`<h2 style="margin-top:0">Add member</h2><form id="addForm" class="form-grid"><div><label>Full name</label><input class="input" name="full_name" required></div><div><label>Username</label><input class="input" name="username" required></div><div><label>Headline</label><input class="input" name="headline"></div><div><label>Company</label><input class="input" name="company"></div><div class="full"><label>Temporary password (optional)</label><input class="input" name="password" minlength="12"></div><div class="full" style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="btn" onclick="SE.closeModal()">Cancel</button><button class="btn primary">Create member</button></div><div id="addErr" class="error full"></div></form>`);
+ $('#addForm').onsubmit=async e=>{e.preventDefault();showLoading(true);try{const f=new FormData(e.currentTarget);const username=slug(f.get('username'));const d=await withAuth(()=>fnFetch('admin-user',{action:'provision_user',username,full_name:f.get('full_name'),password:f.get('password'),domain:CFG.domain,profile:{headline:f.get('headline'),company:f.get('company')}}));await loadMembers();renderMembers();await renderAdmin();openModal(`<h2>Member created</h2><p>Username: <b>${esc(d.username)}</b></p><div class="input" style="font-family:monospace">${esc(d.temporary_password)}</div><p class="muted">Share these credentials privately.</p><button class="btn" onclick="SE.closeModal()">Close</button>`)}catch(err){showError($('#addErr'),err.message)}finally{showLoading(false)}};
+}
+function exportCsv(){
+ const cols=['username','full_name','role','status','headline','company','location','skills','can_help','looking_for'];
+ const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+ const csv=[cols.join(','),...state.members.map(m=>cols.map(c=>q(c==='skills'?(m.skills||[]).join('; '):m[c])).join(','))].join('\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='SE_Connect_member_report.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function logout(){storeSession(null);location.reload()}
+
+$('#loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();showError($('#loginError'),'');$('#loginBtn').disabled=true;$('#loginBtn').textContent='Signing in…';
+ try{await login($('#loginUsername').value.trim(),$('#loginPassword').value);await bootstrap()}
+ catch(err){showError($('#loginError'),err.message||'Login failed')}
+ finally{$('#loginBtn').disabled=false;$('#loginBtn').textContent='Sign in'}
+});
+$('#logoutBtn').onclick=logout;
+$$('[data-view]').forEach(b=>b.onclick=()=>switchView(b.dataset.view));
+$('#memberSearch').oninput=renderMembers;
+$('#skillFilter').onchange=renderMembers;
+$('#modal').onclick=e=>{if(e.target===$('#modal'))closeModal()};
+
+window.SE={openMember,messageMember,closeModal,editProfile,changePassword,selectThread,toggleBlock,resetPassword,filterAdmin,addMember,exportCsv};
+
+(async()=>{
+ const s=getStoredSession(); if(!s)return;
+ state.session=s;
+ try{await bootstrap()}catch(e){storeSession(null);showError($('#loginError'),'Your previous session expired. Please sign in again.')}
+})();
+})();
+</script>
+</body>
+</html>
