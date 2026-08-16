@@ -1,0 +1,4 @@
+member_credentials.csv
+.env
+.env.*
+.DS_Store

@@ -1,0 +1,17 @@
+import { serve } from 'https://deno.land/std@0.224.0/http/server.ts'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+const cors={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Headers':'authorization, x-client-info, apikey, content-type'}
+const json=(body:any,status=200)=>new Response(JSON.stringify(body),{status,headers:{...cors,'Content-Type':'application/json'}})
+const randomPassword=()=>{const chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';let s='';crypto.getRandomValues(new Uint32Array(18)).forEach(n=>s+=chars[n%chars.length]);return s}
+serve(async req=>{if(req.method==='OPTIONS')return new Response('ok',{headers:cors});try{
+ const url=Deno.env.get('SUPABASE_URL')!,anon=Deno.env.get('SUPABASE_ANON_KEY')!,service=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+ const token=req.headers.get('Authorization')?.replace('Bearer ','');if(!token)return json({error:'Unauthorized'},401)
+ const userClient=createClient(url,anon,{global:{headers:{Authorization:`Bearer ${token}`}}});const {data:{user}}=await userClient.auth.getUser();if(!user)return json({error:'Unauthorized'},401)
+ const admin=createClient(url,service);const {data:ap}=await admin.from('profiles').select('role,status').eq('id',user.id).single();if(ap?.role!=='admin'||ap?.status!=='active')return json({error:'Admin access required'},403)
+ const body=await req.json();const action=body.action;
+ if(action==='block_user'||action==='unblock_user') {if(body.user_id===user.id)return json({error:'You cannot block your own admin account'},400);const status=action==='block_user'?'blocked':'active';const {error}=await admin.from('profiles').update({status}).eq('id',body.user_id);if(error)throw error;await admin.from('admin_actions').insert({admin_id:user.id,action,target_user_id:body.user_id});return json({ok:true,status})}
+ if(action==='reset_password'){const pwd=randomPassword();const {error}=await admin.auth.admin.updateUserById(body.user_id,{password:pwd});if(error)throw error;await admin.from('admin_actions').insert({admin_id:user.id,action,target_user_id:body.user_id});return json({ok:true,temporary_password:pwd})}
+ if(action==='report_summary'){const {count:total}=await admin.from('profiles').select('*',{count:'exact',head:true});const {count:active}=await admin.from('profiles').select('*',{count:'exact',head:true}).eq('status','active');const {count:blocked}=await admin.from('profiles').select('*',{count:'exact',head:true}).eq('status','blocked');const since=new Date(Date.now()-7*86400000).toISOString();const {count:messages_7d}=await admin.from('messages').select('*',{count:'exact',head:true}).gte('created_at',since);return json({total,active,blocked,messages_7d})}
+ if(action==='provision_user'){const username=String(body.username||'').toLowerCase();const email=`${username}@${body.domain||'members.example.com'}`;const pwd=randomPassword();const {data,error}=await admin.auth.admin.createUser({email,password:pwd,email_confirm:true});if(error)throw error;const {error:pe}=await admin.from('profiles').insert({id:data.user.id,username,full_name:body.full_name,role:body.role||'member',...body.profile});if(pe)throw pe;await admin.from('admin_actions').insert({admin_id:user.id,action,target_user_id:data.user.id});return json({ok:true,user_id:data.user.id,username,temporary_password:pwd})}
+ return json({error:'Unknown action'},400)
+}catch(e){return json({error:e.message||String(e)},500)}})
